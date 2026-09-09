@@ -1,3 +1,4 @@
+import 'admin_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
@@ -12,14 +13,15 @@ class AdminCleaningScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<AppProvider>();
     final rooms = List<RoomModel>.from(provider.rooms)
-      ..sort((a, b) => a.cleaningStatus == CleaningStatus.clean ? 1 : -1);
+      ..sort((a, b) => const [2, 0, 1][a.cleaningStatus.index]
+          .compareTo(const [2, 0, 1][b.cleaningStatus.index]));
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Quản lý dọn phòng')),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: rooms.length,
-        itemBuilder: (context, index) {
+    return AdminPage(
+      title: 'Dọn phòng',
+      subtitle: 'Ưu tiên phòng cần dọn và cập nhật tiến độ ngay tại đây.',
+      child: AdminGrid(
+        count: rooms.length,
+        builder: (context, index) {
           final room = rooms[index];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
@@ -41,7 +43,8 @@ class AdminCleaningScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text('Trạng thái phòng: ${_roomStatusLabel(room.status)}',
-                      style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                      style:
+                          const TextStyle(color: AppTheme.muted, fontSize: 12)),
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -91,4 +94,3 @@ class AdminCleaningScreen extends StatelessWidget {
     }
   }
 }
-

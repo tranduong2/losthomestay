@@ -26,32 +26,33 @@ class HomestayApp extends StatelessWidget {
       child: MaterialApp(
         navigatorKey: navigatorKey,
         builder: (context, child) => Column(children: [
-          GalaxyHeader(onNavigate: (route) {
-            final nav = navigatorKey.currentState!;
-            if (route == '/menu') {
-              showModalBottomSheet(
-                  context: nav.overlay!.context,
-                  builder: (sheetContext) => SafeArea(
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: GalaxyHeader.links.entries
-                              .map((e) => ListTile(
-                                  title: Text(e.key),
-                                  onTap: () {
-                                    Navigator.pop(sheetContext);
-                                    if (e.value == '/') {
-                                      nav.popUntil((r) => r.isFirst);
-                                    } else {
-                                      nav.pushNamed(e.value);
-                                    }
-                                  }))
-                              .toList())));
-            } else if (route == '/') {
-              nav.popUntil((r) => r.isFirst);
-            } else {
-              nav.pushNamed(route);
-            }
-          }),
+          if (!context.watch<AppProvider>().isAdmin)
+            GalaxyHeader(onNavigate: (route) {
+              final nav = navigatorKey.currentState!;
+              if (route == '/menu') {
+                showModalBottomSheet(
+                    context: nav.overlay!.context,
+                    builder: (sheetContext) => SafeArea(
+                        child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: GalaxyHeader.links.entries
+                                .map((e) => ListTile(
+                                    title: Text(e.key),
+                                    onTap: () {
+                                      Navigator.pop(sheetContext);
+                                      if (e.value == '/') {
+                                        nav.popUntil((r) => r.isFirst);
+                                      } else {
+                                        nav.pushNamed(e.value);
+                                      }
+                                    }))
+                                .toList())));
+              } else if (route == '/') {
+                nav.popUntil((r) => r.isFirst);
+              } else {
+                nav.pushNamed(route);
+              }
+            }),
           Expanded(child: child!),
         ]),
         title: 'LOST Đà Lạt — Boutique Hotel giữa ngàn thông',

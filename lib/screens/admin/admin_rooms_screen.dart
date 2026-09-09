@@ -1,3 +1,4 @@
+import 'admin_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
@@ -23,9 +24,11 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
         .where((r) => _filter == null || r.status == _filter)
         .toList();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tình trạng phòng')),
-      body: Column(
+    return AdminPage(
+      title: 'Quản lý phòng',
+      subtitle:
+          'Theo dõi tình trạng và chuẩn bị phòng cho lượt khách tiếp theo.',
+      child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -42,10 +45,9 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: rooms.length,
-              itemBuilder: (context, index) {
+            child: AdminGrid(
+              count: rooms.length,
+              builder: (context, index) {
                 final room = rooms[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
@@ -66,7 +68,7 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
                                 errorBuilder: (_, __, ___) => Container(
                                   width: 60,
                                   height: 60,
-                                  color: Colors.grey[300],
+                                  color: adminPanel,
                                   child: const Icon(Icons.house),
                                 ),
                               ),
@@ -157,4 +159,3 @@ class _AdminRoomsScreenState extends State<AdminRoomsScreen> {
     );
   }
 }
-
