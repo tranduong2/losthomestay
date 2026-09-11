@@ -97,8 +97,9 @@ class GalaxyHeader extends StatelessWidget {
                                     .toList())),
                       const SizedBox(width: 12),
                       if (user != null) ...[
-                        Tooltip(
-                          message: 'Tài khoản của ${user.name}',
+                        Semantics(
+                          label: 'Tài khoản của ${user.name}',
+                          button: true,
                           child: InkWell(
                             key: const ValueKey('customer-account'),
                             borderRadius: BorderRadius.circular(24),
