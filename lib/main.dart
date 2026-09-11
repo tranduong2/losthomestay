@@ -34,11 +34,39 @@ Future<void> main() async {
   }
 }
 
+class AppRouteObserver extends NavigatorObserver {
+  String? currentRouteName;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    currentRouteName = route.settings.name;
+    super.didPush(route, previousRoute);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    currentRouteName = previousRoute?.settings.name;
+    super.didPop(route, previousRoute);
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    currentRouteName = newRoute?.settings.name;
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+  }
+}
+
 class HomestayApp extends StatelessWidget {
   const HomestayApp({super.key, this.live = false});
   final bool live;
 
   static final navigatorKey = GlobalKey<NavigatorState>();
+  static final routeObserver = AppRouteObserver();
+
+  static void pushNamedOnce(NavigatorState navigator, String route) {
+    if (routeObserver.currentRouteName == route) return;
+    navigator.pushNamed(route);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,19 +113,20 @@ class HomestayApp extends StatelessWidget {
                                       if (e.value == '/') {
                                         nav.popUntil((r) => r.isFirst);
                                       } else {
-                                        nav.pushNamed(e.value);
+                                        pushNamedOnce(nav, e.value);
                                       }
                                     }))
                                 .toList())));
               } else if (route == '/') {
                 nav.popUntil((r) => r.isFirst);
               } else {
-                nav.pushNamed(route);
+                pushNamedOnce(nav, route);
               }
             }),
           Expanded(child: child!),
         ]),
         title: 'LOST Đà Lạt — Boutique Hotel giữa ngàn thông',
+        navigatorObservers: [routeObserver],
         debugShowCheckedModeBanner: false,
         theme: AppTheme.dark(),
         home: const MainNavigation(),

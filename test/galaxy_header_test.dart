@@ -5,6 +5,7 @@ import 'package:homestay_app/widgets/galaxy_header.dart';
 import 'package:homestay_app/providers/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:homestay_app/screens/customer/rooms_screen.dart';
+import 'package:homestay_app/screens/customer/profile_screen.dart';
 
 void main() {
   for (final width in [390.0, 1440.0]) {
@@ -52,5 +53,27 @@ void main() {
     expect(find.text('Đăng ký'), findsNothing);
     await tester.tap(find.byKey(const ValueKey('customer-account')));
     expect(route, '/profile');
+  });
+
+  testWidgets('account icon opens only one profile route', (tester) async {
+    tester.view.physicalSize = const Size(1440, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(const HomestayApp());
+    final provider =
+        tester.element(find.byType(GalaxyHeader)).read<AppProvider>();
+    await provider.login('khach@gmail.com', '123456');
+    await tester.pump();
+
+    for (var i = 0; i < 4; i++) {
+      await tester.tap(find.byKey(const ValueKey('customer-account')));
+    }
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfileScreen), findsOneWidget);
+
+    HomestayApp.navigatorKey.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfileScreen), findsNothing);
   });
 }
