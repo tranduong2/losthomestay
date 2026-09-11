@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../models/room_model.dart';
@@ -6,6 +7,19 @@ import '../models/booking_model.dart';
 import '../models/discount_model.dart';
 
 class AppProvider extends ChangeNotifier {
+  bool get isLive => false;
+  bool loading = false;
+  String? lastError;
+  void clearError() {
+    lastError = null;
+    notifyListeners();
+  }
+
+  Future<void> sendContact(
+      String name, String email, String phone, String message) async {
+    throw StateError('Chức năng liên hệ cần kết nối Firebase.');
+  }
+
   UserModel? currentUser;
 
   final List<RoomModel> rooms = List.from(MockData.rooms);
@@ -17,7 +31,7 @@ class AppProvider extends ChangeNotifier {
   bool get isAdmin => currentUser?.role == UserRole.admin;
 
   // ----------------- AUTH -----------------
-  String? login(String email, String password) {
+  FutureOr<String?> login(String email, String password) {
     final match = users.where(
       (u) =>
           u.email.toLowerCase() == email.toLowerCase() &&
@@ -31,7 +45,8 @@ class AppProvider extends ChangeNotifier {
     return null;
   }
 
-  String? register(String name, String email, String password, String phone) {
+  FutureOr<String?> register(
+      String name, String email, String password, String phone) {
     final exists =
         users.any((u) => u.email.toLowerCase() == email.toLowerCase());
     if (exists) return 'Email đã được sử dụng';
@@ -44,7 +59,7 @@ class AppProvider extends ChangeNotifier {
       role: UserRole.customer,
     );
     users.add(newUser);
-    currentUser = newUser;
+    currentUser = null;
     notifyListeners();
     return null;
   }
@@ -55,7 +70,7 @@ class AppProvider extends ChangeNotifier {
   }
 
   // ----------------- DISCOUNT -----------------
-  DiscountModel? validateDiscount(String code) {
+  FutureOr<DiscountModel?> validateDiscount(String code) {
     try {
       final d = discounts.firstWhere(
         (e) => e.code.toLowerCase() == code.trim().toLowerCase(),
@@ -67,7 +82,7 @@ class AppProvider extends ChangeNotifier {
   }
 
   // ----------------- BOOKING -----------------
-  BookingModel createBooking({
+  FutureOr<BookingModel> createBooking({
     required RoomModel room,
     required DateTime checkIn,
     required DateTime checkOut,
@@ -172,4 +187,3 @@ class AppProvider extends ChangeNotifier {
     }).toList();
   }
 }
-

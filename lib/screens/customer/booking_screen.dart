@@ -92,19 +92,26 @@ class _BookingScreenState extends State<BookingScreen> {
     }
   }
 
-  void _applyDiscount() {
-    final provider = context.read<AppProvider>();
-    final discount = provider.validateDiscount(_codeCtrl.text);
-    setState(() {
-      if (discount != null) {
-        _appliedDiscount = discount;
-        _discountMsg =
-            'Áp dụng thành công: giảm ${discount.percent.toStringAsFixed(0)}%';
-      } else {
-        _appliedDiscount = null;
-        _discountMsg = 'Mã giảm giá không hợp lệ hoặc đã hết hạn';
-      }
-    });
+  void _applyDiscount() async {
+    try {
+      final provider = context.read<AppProvider>();
+      final discount = await provider.validateDiscount(_codeCtrl.text);
+      if (!mounted) return;
+      setState(() {
+        if (discount != null) {
+          _appliedDiscount = discount;
+          _discountMsg =
+              'Áp dụng thành công: giảm ${discount.percent.toStringAsFixed(0)}%';
+        } else {
+          _appliedDiscount = null;
+          _discountMsg = 'Mã giảm giá không hợp lệ hoặc đã hết hạn';
+        }
+      });
+    } catch (_) {
+      if (mounted)
+        setState(() =>
+            _discountMsg = 'Không kiểm tra được mã. Hãy đăng nhập và thử lại.');
+    }
   }
 
   void _continue() {
@@ -166,4 +173,3 @@ class _BookingScreenState extends State<BookingScreen> {
         discountMessage: _discountMsg,
       );
 }
-

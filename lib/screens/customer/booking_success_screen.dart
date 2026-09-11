@@ -28,9 +28,11 @@ class BookingSuccessScreen extends StatelessWidget {
                     color: AppTheme.primary, size: 72),
               ),
               const SizedBox(height: 20),
-              const Text('Đặt phòng thành công!',
+              const Text('Đã gửi yêu cầu đặt phòng',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
+              const Text('Đang chờ homestay xác nhận. Chưa thu tiền.',
+                  textAlign: TextAlign.center),
               Text('Mã đặt phòng: ${booking.id}',
                   style: const TextStyle(color: Colors.grey)),
               const SizedBox(height: 24),
@@ -82,5 +84,3 @@ class BookingSuccessScreen extends StatelessWidget {
     );
   }
 }
-
-

@@ -38,13 +38,10 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  String _method = 'Thẻ tín dụng/ghi nợ';
+  String _method = 'Thanh toán tại homestay';
   bool _processing = false;
 
   final _methods = const [
-    {'name': 'Thẻ tín dụng/ghi nợ', 'icon': Icons.credit_card},
-    {'name': 'Ví MoMo', 'icon': Icons.account_balance_wallet_outlined},
-    {'name': 'Chuyển khoản ngân hàng', 'icon': Icons.account_balance_outlined},
     {'name': 'Thanh toán tại homestay', 'icon': Icons.home_outlined},
   ];
 
@@ -61,24 +58,35 @@ class _PaymentScreenState extends State<PaymentScreen> {
       return;
     }
 
+    if (_processing) return;
     setState(() => _processing = true);
-    await Future.delayed(const Duration(seconds: 2));
-    if (!mounted) return;
-    final booking = provider.createBooking(
-      room: widget.room,
-      checkIn: widget.checkIn,
-      checkOut: widget.checkOut,
-      guests: widget.guests,
-      discount: widget.discount,
-      paymentMethod: _method,
-      contactName: widget.contactName,
-      contactPhone: widget.contactPhone,
-    );
-    setState(() => _processing = false);
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => BookingSuccessScreen(booking: booking)),
-      (route) => route.isFirst,
-    );
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      final booking = await provider.createBooking(
+        room: widget.room,
+        checkIn: widget.checkIn,
+        checkOut: widget.checkOut,
+        guests: widget.guests,
+        discount: widget.discount,
+        paymentMethod: _method,
+        contactName: widget.contactName,
+        contactPhone: widget.contactPhone,
+      );
+      if (!mounted) return;
+      setState(() => _processing = false);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (_) => BookingSuccessScreen(booking: booking)),
+        (route) => route.isFirst,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _processing = false);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Chưa gửi được yêu cầu. Kiểm tra mạng, ngày đặt và mã giảm giá rồi thử lại.')));
+    }
   }
 
   @override
@@ -181,5 +189,3 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 }
-
-

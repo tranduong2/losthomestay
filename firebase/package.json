@@ -1,0 +1,7 @@
+{
+  "name": "homestay-firestore-setup",
+  "private": true,
+  "type": "module",
+  "scripts": {"check": "node seed.mjs --dry-run", "seed": "node seed.mjs"},
+  "dependencies": {"firebase-admin": "^13.0.0"}
+}

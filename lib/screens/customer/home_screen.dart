@@ -19,6 +19,47 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _contactName = TextEditingController();
+  final _contactEmail = TextEditingController();
+  final _contactPhone = TextEditingController();
+  final _contactMessage = TextEditingController();
+  bool _sendingContact = false;
+  @override
+  void dispose() {
+    _contactName.dispose();
+    _contactEmail.dispose();
+    _contactPhone.dispose();
+    _contactMessage.dispose();
+    super.dispose();
+  }
+
+  Future<void> _sendContact() async {
+    if (_sendingContact) return;
+    if (_contactName.text.trim().isEmpty ||
+        !_contactEmail.text.contains('@') ||
+        _contactMessage.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Nhập họ tên, email và nội dung liên hệ.')));
+      return;
+    }
+    setState(() => _sendingContact = true);
+    try {
+      await context.read<AppProvider>().sendContact(_contactName.text,
+          _contactEmail.text, _contactPhone.text, _contactMessage.text);
+      if (!mounted) return;
+      _contactMessage.clear();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Đã lưu liên hệ. Homestay sẽ phản hồi sớm.')));
+    } catch (_) {
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text(
+                'Chưa gửi được. Hãy đăng nhập, kiểm tra nội dung và thử lại.')));
+    } finally {
+      if (mounted) setState(() => _sendingContact = false);
+    }
+  }
+
   final _pager = GlobalKey<SectionPagerState>();
   final _roomsKey = GlobalKey();
   final _aboutKey = GlobalKey();
@@ -569,23 +610,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 37,
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 28),
-            const TextField(
-                decoration: InputDecoration(labelText: 'Họ và tên')),
+            TextField(
+                controller: _contactName,
+                maxLength: 100,
+                decoration: const InputDecoration(labelText: 'Họ và tên')),
             const SizedBox(height: 16),
-            const TextField(decoration: InputDecoration(labelText: 'Email')),
+            TextField(
+                controller: _contactEmail,
+                maxLength: 254,
+                decoration: const InputDecoration(labelText: 'Email')),
             const SizedBox(height: 16),
-            const TextField(
-                decoration: InputDecoration(labelText: 'Số điện thoại')),
+            TextField(
+                controller: _contactPhone,
+                maxLength: 30,
+                decoration: const InputDecoration(labelText: 'Số điện thoại')),
             const SizedBox(height: 16),
-            const TextField(
+            TextField(
+                controller: _contactMessage,
+                maxLength: 2000,
                 maxLines: 4,
-                decoration: InputDecoration(labelText: 'Nội dung')),
+                decoration: const InputDecoration(labelText: 'Nội dung')),
             const SizedBox(height: 25),
             FilledButton(
-                onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text(
-                            'Cảm ơn bạn, chúng tôi sẽ liên hệ sớm nhất!'))),
+                onPressed: _sendingContact ? null : _sendContact,
                 style: FilledButton.styleFrom(
                     backgroundColor: AppTheme.primary,
                     padding: const EdgeInsets.symmetric(

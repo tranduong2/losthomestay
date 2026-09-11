@@ -1,0 +1,215 @@
+{
+  "rooms": {
+    "R001": {
+      "name": "Phòng Garden View",
+      "description": "Phòng view vườn yên tĩnh, thiết kế mộc mạc gần gũi thiên nhiên. Phù hợp cho cặp đôi hoặc gia đình nhỏ muốn nghỉ dưỡng thư giãn.",
+      "pricePerNight": 450000.0,
+      "imageUrl": "https://picsum.photos/seed/room1/800/500",
+      "maxGuests": 2,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bãi đỗ xe"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    },
+    "R002": {
+      "name": "Phòng Lake View",
+      "description": "Phòng hướng hồ, ban công riêng ngắm hoàng hôn tuyệt đẹp. Nội thất hiện đại, đầy đủ tiện nghi cho kỳ nghỉ đáng nhớ.",
+      "pricePerNight": 650000.0,
+      "imageUrl": "https://picsum.photos/seed/room2/800/500",
+      "maxGuests": 3,
+      "amenities": [
+        "Wifi miễn phí",
+        "Ban công",
+        "Bồn tắm",
+        "Minibar"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.9
+    },
+    "R003": {
+      "name": "Bungalow Gia Đình",
+      "description": "Bungalow rộng rãi dành cho gia đình đông người, có phòng khách riêng và bếp nhỏ tiện nghi.",
+      "pricePerNight": 950000.0,
+      "imageUrl": "https://picsum.photos/seed/room3/800/500",
+      "maxGuests": 5,
+      "amenities": [
+        "Wifi miễn phí",
+        "Bếp riêng",
+        "2 phòng ngủ",
+        "Sân vườn"
+      ],
+      "status": "occupied",
+      "cleaningStatus": "dirty",
+      "rating": 4.7
+    },
+    "R004": {
+      "name": "Phòng Dorm Tiết Kiệm",
+      "description": "Phòng dạng dorm giá tốt, phù hợp cho khách du lịch bụi, sinh viên muốn tiết kiệm chi phí.",
+      "pricePerNight": 180000.0,
+      "imageUrl": "https://picsum.photos/seed/room4/800/500",
+      "maxGuests": 1,
+      "amenities": [
+        "Wifi miễn phí",
+        "Tủ khóa cá nhân",
+        "Quạt trần"
+      ],
+      "status": "available",
+      "cleaningStatus": "cleaning",
+      "rating": 4.3
+    },
+    "R005": {
+      "name": "Villa Riêng Tư",
+      "description": "Villa nguyên căn riêng tư tuyệt đối, có hồ bơi mini, sân BBQ, thích hợp cho nhóm bạn hoặc gia đình lớn.",
+      "pricePerNight": 1500000.0,
+      "imageUrl": "https://picsum.photos/seed/room5/800/500",
+      "maxGuests": 8,
+      "amenities": [
+        "Hồ bơi riêng",
+        "Sân BBQ",
+        "Wifi tốc độ cao",
+        "Bãi đỗ xe"
+      ],
+      "status": "maintenance",
+      "cleaningStatus": "dirty",
+      "rating": 5.0
+    },
+    "R006": {
+      "name": "Đồi Thông",
+      "description": "Đồi Thông có không gian thoáng sáng, nội thất ấm cúng và khu vực nghỉ ngơi riêng. Phù hợp cho cặp đôi hoặc khách nghỉ dưỡng với sức chứa 2 khách.",
+      "pricePerNight": 520000.0,
+      "imageUrl": "https://picsum.photos/seed/room6/800/500",
+      "maxGuests": 2,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bàn làm việc"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    },
+    "R007": {
+      "name": "Sunset Balcony",
+      "description": "Sunset Balcony có không gian thoáng sáng, nội thất ấm cúng và khu vực nghỉ ngơi riêng. Phù hợp cho cặp đôi hoặc khách nghỉ dưỡng với sức chứa 3 khách.",
+      "pricePerNight": 780000.0,
+      "imageUrl": "https://picsum.photos/seed/room7/800/500",
+      "maxGuests": 3,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bàn làm việc"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    },
+    "R008": {
+      "name": "Bungalow Hoa Cẩm Tú",
+      "description": "Bungalow Hoa Cẩm Tú có không gian thoáng sáng, nội thất ấm cúng và khu vực nghỉ ngơi riêng. Phù hợp cho gia đình hoặc nhóm bạn với sức chứa 5 khách.",
+      "pricePerNight": 1100000.0,
+      "imageUrl": "https://picsum.photos/seed/room8/800/500",
+      "maxGuests": 5,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bếp riêng"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    },
+    "R009": {
+      "name": "Suite Panorama",
+      "description": "Suite Panorama có không gian thoáng sáng, nội thất ấm cúng và khu vực nghỉ ngơi riêng. Phù hợp cho gia đình hoặc nhóm bạn với sức chứa 8 khách.",
+      "pricePerNight": 1850000.0,
+      "imageUrl": "https://picsum.photos/seed/room9/800/500",
+      "maxGuests": 8,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bếp riêng"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    },
+    "R010": {
+      "name": "Gác Mái",
+      "description": "Gác Mái có không gian thoáng sáng, nội thất ấm cúng và khu vực nghỉ ngơi riêng. Phù hợp cho cặp đôi hoặc khách nghỉ dưỡng với sức chứa 2 khách.",
+      "pricePerNight": 390000.0,
+      "imageUrl": "https://picsum.photos/seed/room10/800/500",
+      "maxGuests": 2,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bàn làm việc"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    },
+    "R011": {
+      "name": "Studio Bên Vườn",
+      "description": "Studio Bên Vườn có không gian thoáng sáng, nội thất ấm cúng và khu vực nghỉ ngơi riêng. Phù hợp cho cặp đôi hoặc khách nghỉ dưỡng với sức chứa 3 khách.",
+      "pricePerNight": 690000.0,
+      "imageUrl": "https://picsum.photos/seed/room11/800/500",
+      "maxGuests": 3,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bàn làm việc"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    },
+    "R012": {
+      "name": "Villa An Nhiên",
+      "description": "Villa An Nhiên có không gian thoáng sáng, nội thất ấm cúng và khu vực nghỉ ngơi riêng. Phù hợp cho gia đình hoặc nhóm bạn với sức chứa 10 khách.",
+      "pricePerNight": 2200000.0,
+      "imageUrl": "https://picsum.photos/seed/room12/800/500",
+      "maxGuests": 10,
+      "amenities": [
+        "Wifi miễn phí",
+        "Điều hòa",
+        "Nước nóng",
+        "Bếp riêng"
+      ],
+      "status": "available",
+      "cleaningStatus": "clean",
+      "rating": 4.8
+    }
+  },
+  "discounts": {
+    "WELCOME10": {
+      "code": "WELCOME10",
+      "percent": 10.0,
+      "expiry": "2027-09-10T02:27:19.638941Z",
+      "active": true
+    },
+    "SUMMER20": {
+      "code": "SUMMER20",
+      "percent": 20.0,
+      "expiry": "2026-12-09T02:27:19.641944Z",
+      "active": true
+    },
+    "HOMESTAY50": {
+      "code": "HOMESTAY50",
+      "percent": 50.0,
+      "expiry": "2026-09-15T02:27:19.641944Z",
+      "active": true
+    }
+  }
+}

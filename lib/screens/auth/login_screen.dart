@@ -16,32 +16,34 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailCtrl = TextEditingController(text: 'khach@gmail.com');
-  final _passCtrl = TextEditingController(text: '123456');
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
   bool _loading = false;
   bool _obscure = true;
 
   void _submit() async {
+    if (_loading) return;
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     final provider = context.read<AppProvider>();
-    final error = provider.login(_emailCtrl.text.trim(), _passCtrl.text);
-    setState(() => _loading = false);
+    final error = await provider.login(_emailCtrl.text.trim(), _passCtrl.text);
     if (!mounted) return;
+    setState(() => _loading = false);
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error), backgroundColor: Colors.red));
       return;
     }
-    if (provider.isAdmin) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const AdminMainNavigation()));
-    } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const MainNavigation()));
-    }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Đăng nhập thành công!'), backgroundColor: Colors.green));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (_) => provider.isAdmin
+                ? const AdminMainNavigation()
+                : const MainNavigation()),
+        (route) => false);
   }
 
   @override
@@ -89,8 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () => setState(() => _obscure = !_obscure),
                     ),
                   ),
-                  validator: (v) => (v == null || v.length < 4)
-                      ? 'Mật khẩu tối thiểu 4 ký tự'
+                  validator: (v) => (v == null || v.length < 6)
+                      ? 'Mật khẩu tối thiểu 6 ký tự'
                       : null,
                 ),
                 const SizedBox(height: 24),
@@ -106,17 +108,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const Divider(height: 32),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(10),
+                if (!context.watch<AppProvider>().isLive)
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'Tài khoản demo:\n• Khách: khach@gmail.com / 123456\n• Admin: admin@homestay.com / admin123',
+                      style: TextStyle(fontSize: 12.5),
+                    ),
                   ),
-                  child: const Text(
-                    'Tài khoản demo:\n• Khách: khach@gmail.com / 123456\n• Admin: admin@homestay.com / admin123',
-                    style: TextStyle(fontSize: 12.5),
-                  ),
-                ),
               ],
             ),
           ),
@@ -125,4 +128,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

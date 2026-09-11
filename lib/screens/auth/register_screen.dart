@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/app_provider.dart';
 import '../../widgets/primary_button.dart';
-import '../customer/main_navigation.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -20,23 +20,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _loading = false;
 
   void _submit() async {
+    if (_loading) return;
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     final provider = context.read<AppProvider>();
-    final error = provider.register(_nameCtrl.text.trim(),
+    final error = await provider.register(_nameCtrl.text.trim(),
         _emailCtrl.text.trim(), _passCtrl.text, _phoneCtrl.text.trim());
-    setState(() => _loading = false);
     if (!mounted) return;
+    setState(() => _loading = false);
     if (error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error), backgroundColor: Colors.red));
       return;
     }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.'),
+        backgroundColor: Colors.green));
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const MainNavigation()),
-        (r) => false);
+        MaterialPageRoute(builder: (_) => const LoginScreen()), (r) => false);
   }
 
   @override
@@ -86,8 +89,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: const InputDecoration(
                     labelText: 'Mật khẩu',
                     prefixIcon: Icon(Icons.lock_outline)),
-                validator: (v) => (v == null || v.length < 4)
-                    ? 'Mật khẩu tối thiểu 4 ký tự'
+                validator: (v) => (v == null || v.length < 6)
+                    ? 'Mật khẩu tối thiểu 6 ký tự'
                     : null,
               ),
               const SizedBox(height: 24),
@@ -100,4 +103,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-

@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function admin() { return signedIn() && request.auth.token.admin == true; }
+    function text(value, max) { return value is string && value.size() > 0 && value.size() <= max; }
+    function validDiscount(d) {
+      return (d.discountCode == null && d.discountPercent == 0)
+        || (d.discountCode is string
+          && get(/databases/$(database)/documents/discounts/$(d.discountCode)).data.active == true
+          && get(/databases/$(database)/documents/discounts/$(d.discountCode)).data.expiry > request.time
+          && d.discountPercent == get(/databases/$(database)/documents/discounts/$(d.discountCode)).data.percent
+          && d.discountPercent >= 0 && d.discountPercent <= 100);
+    }
+    function validBooking(d) {
+      let room = get(/databases/$(database)/documents/rooms/$(d.roomId)).data;
+      let nights = (d.checkOut - d.checkIn).seconds() / 86400;
+      return d.keys().hasOnly(['roomId', 'roomName', 'userId', 'userName', 'contactPhone',
+          'checkIn', 'checkOut', 'guests', 'subtotal', 'discountPercent', 'total',
+          'discountCode', 'createdAt', 'status', 'paymentMethod'])
+        && d.userId == request.auth.uid && d.status == 'pending'
+        && d.createdAt == request.time && room.status == 'available'
+        && d.roomName == room.name && text(d.userName, 100)
+        && d.contactPhone is string && d.contactPhone.size() <= 30
+        && d.checkIn is timestamp && d.checkOut is timestamp
+        && d.checkIn >= request.time - duration.value(1, 'd')
+        && d.checkIn <= request.time + duration.value(730, 'd')
+        && nights >= 1 && nights <= 30 && nights == math.floor(nights)
+        && d.guests is int && d.guests >= 1 && d.guests <= room.maxGuests
+        && d.subtotal == room.pricePerNight * nights && validDiscount(d)
+        && d.total == d.subtotal * (100 - d.discountPercent) / 100
+        && d.paymentMethod == 'Thanh toán tại homestay';
+    }
+    match /rooms/{id} {
+      allow read: if true;
+      allow write: if admin();
+    }
+    match /users/{uid} {
+      allow read: if admin() || (signedIn() && request.auth.uid == uid);
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasAll(['name', 'email', 'phone', 'role'])
+        && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'role'])
+        && request.resource.data.name is string
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.phone is string
+        && request.resource.data.role == 'customer';
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'phone'])
+        && request.resource.data.name is string
+        && request.resource.data.phone is string;
+      allow delete: if admin();
+    }
+    match /bookings/{id} {
+      allow read: if admin() || (signedIn() && resource.data.userId == request.auth.uid);
+      // Pending requests do not reserve inventory or record a payment.
+      allow create: if signedIn() && validBooking(request.resource.data);
+      allow update: if admin() || (signedIn() && resource.data.userId == request.auth.uid
+        && resource.data.status in ['pending', 'confirmed']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status == 'cancelled');
+      allow delete: if admin();
+    }
+    match /discounts/{code} {
+      allow get: if signedIn();
+      allow list, write: if admin();
+    }
+    match /contact_requests/{id} {
+      allow read, write: if admin();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['userId', 'name', 'email', 'phone', 'message', 'status', 'createdAt'])
+        && request.resource.data.userId == request.auth.uid
+        && text(request.resource.data.name, 100) && text(request.resource.data.email, 254)
+        && request.resource.data.email.matches('.*@.*')
+        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
+        && text(request.resource.data.message, 2000)
+        && request.resource.data.status == 'new' && request.resource.data.createdAt == request.time;
+    }
+  }
+}

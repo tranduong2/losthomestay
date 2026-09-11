@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:homestay_app/main.dart';
 import 'package:homestay_app/widgets/galaxy_header.dart';
+import 'package:homestay_app/providers/app_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:homestay_app/screens/customer/rooms_screen.dart';
 
 void main() {
@@ -30,5 +32,25 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
-}
 
+  testWidgets('shows customer icon and name after login', (tester) async {
+    final provider = AppProvider();
+    await provider.login('khach@gmail.com', '123456');
+    String? route;
+    await tester.pumpWidget(ChangeNotifierProvider.value(
+      value: provider,
+      child: MaterialApp(
+          home: Scaffold(
+              body: GalaxyHeader(
+        onNavigate: (value) => route = value,
+      ))),
+    ));
+
+    expect(find.byIcon(Icons.account_circle), findsOneWidget);
+    expect(find.text('Nguyễn Văn A'), findsOneWidget);
+    expect(find.text('Đăng nhập'), findsNothing);
+    expect(find.text('Đăng ký'), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('customer-account')));
+    expect(route, '/profile');
+  });
+}
