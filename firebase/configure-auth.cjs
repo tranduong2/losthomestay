@@ -9,6 +9,16 @@ async function main() {
   const options = {headers: {'x-goog-user-project': 'lost-31a48'}};
   const before = (await client.get(path, options)).body;
   console.log('Email/password enabled:', before.signIn?.email?.enabled === true);
+  if (process.argv.includes('--list-users')) {
+    const users = await cli('./lib/gcp/auth').listUsers('lost-31a48', 100);
+    console.log(JSON.stringify(users.map(user => ({
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      disabled: user.disabled === true,
+    })), null, 2));
+    return;
+  }
   if (process.argv.includes('--enable') && before.signIn?.email?.enabled !== true) {
     await client.patch(path, {signIn: {email: {enabled: true, passwordRequired: true}}},
       {...options, queryParams: {updateMask: 'signIn.email.enabled,signIn.email.passwordRequired'}});
