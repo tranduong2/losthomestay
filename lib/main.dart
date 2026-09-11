@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'firebase_options.dart';
 import 'providers/firebase_app_provider.dart';
 import 'widgets/galaxy_header.dart';
@@ -18,6 +20,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp(options: firebaseWebOptions);
+    if (kIsWeb) {
+      // Keep the signed-in customer across refreshes and browser restarts.
+      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+    }
     runApp(const HomestayApp(live: true));
   } catch (_) {
     runApp(const MaterialApp(
