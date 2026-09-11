@@ -41,6 +41,10 @@
    flutter run
    ```
 
+Trong VS Code, mở **Run and Debug**, chọn **Homestay Web (Chrome)** rồi nhấn
+F5. Không chạy riêng một file trong `lib/screens/`, vì các file màn hình không
+có hàm `main()`; entry point của ứng dụng luôn là `lib/main.dart`.
+
 ## Cấu trúc thư mục
 
 ```
